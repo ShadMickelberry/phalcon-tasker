@@ -9,7 +9,7 @@
 <?php
 
     $project_content = '';
-    $overdue = date('Y-m-d');
+
     foreach ($projects as $project) {
         $project_content .= '
         <div class="col-md-6">
@@ -38,7 +38,9 @@
                             Overdue Tasks:
                             <span class="badge overdue_badge">
                                 ' . count($project->getTasks(array(
-                            "date_completed is null AND due_date <= $overdue "))) . '
+                                "date_completed is null and TIMESTAMPDIFF(HOUR, NOW(), CONCAT(due_date, ' ',
+                                due_time)) < 0"
+                    ))) . '
                             </span>
                         </p>
                         <p class="lead">

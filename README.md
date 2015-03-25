@@ -3,10 +3,44 @@ Task manager project I've been working on using Phalcon PHP.
 
 Uses Launchkey oauth for logins.
 
+
+
 ## API Keys Needed
 You will need to sign up for an API Key with Launchkey. The client id and secret from Launchkey need to go into the
 authenticators table in addition to the redirect url, 'userauths/login', and the path to the Launchkey public key.
 I had it in app/files/launchkey.key
+
+## app/config/config.php
+<?php
+
+return new \Phalcon\Config(array(
+    'database' => array(
+        'adapter'     => 'Mysql',
+        'host'        => 'localhost',
+        'username'    => 'root',
+        'password'    => '',
+        'dbname'      => '',
+    ),
+    'application' => array(
+        'controllersDir' => __DIR__ . '/../../app/controllers/',
+        'modelsDir'      => __DIR__ . '/../../app/models/',
+        'viewsDir'       => __DIR__ . '/../../app/views/',
+        'pluginsDir'     => __DIR__ . '/../../app/plugins/',
+        'libraryDir'     => __DIR__ . '/../../app/library/',
+        'cacheDir'       => __DIR__ . '/../../app/cache/',
+        'baseUri'        => '/',
+    ),
+    'mail' => array(
+        'smtp' => array(
+            'login'     => '',
+            'password'  => '',
+            'url'       => '',
+            'port'      => ''
+        ),
+        'fromAddress'   => 'Tasker',
+        'fromEmail'     => ''
+    )
+));
 
 
 ## Database Tables Needed
