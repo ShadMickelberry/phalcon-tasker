@@ -1,0 +1,85 @@
+body {
+
+}
+
+input.ng-invalid.ng-dirty, textarea.ng-invalid.ng-dirty, select.ng-invalid {
+    border: 1px solid red;
+}
+
+input.ng-valid.ng-dirty, textarea.ng-valid.ng-dirty, select.ng-valid
+{
+    border: 1px solid green;
+}
+.successMessage {
+    color: #31708F;
+    background-color: #D9EDF7;
+    border-color: #BCE8F1;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.errorMessage {
+    color: #A94442;
+    background-color: #F2DEDE;
+    border-color: #EBCCD1;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.warningMessage {
+    color: #8A6D3B;
+    background-color: #FCF8E3;
+    border-color: #FAEBCC;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.overdue_badge {
+    background-color: red;
+}
+
+td {
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+td, span {
+    max-width: 300px;
+}
+
+
+@media (min-width: 980px) {
+    td, span {
+        max-width: 300px;
+    }
+
+}
+@media (min-width: 768px) and (max-width: 979px) {
+
+    td, span {
+        max-width: 300px;
+    }
+
+}
+
+
+@media (min-width: 501px) and (max-width: 767px) {
+    td, span {
+        max-width: 250px;
+    }
+
+}
+
+@media (max-width: 500px) {
+    td, span {
+        max-width: 200px;
+    }
+
+}

@@ -1,0 +1,69 @@
+<div class="row">
+    <?php
+        echo Phalcon\Tag::linkTo(array('projects/create', 'New Project', 'class' => 'btn btn-primary btn-lg'));
+    ?>
+    <br/>
+    <hr/>
+</div>
+
+<?php
+
+    $project_content = '';
+    $overdue = date('Y-m-d');
+    foreach ($projects as $project) {
+        $project_content .= '
+        <div class="col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        ' . $project->name . '
+                    </h2>
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-6">
+                        <p class="lead">
+                            Due Date:
+                            <span class="badge">
+                                ' . $project->due_date . '
+                            </span>
+                        </p>
+                        <p class="lead">
+                            Open Tasks:
+                            <span class="badge">
+                                ' . count($project->getTasks(array(
+                            "date_completed is null"))) . '
+                            </span>
+                        </p>
+                        <p class="lead">
+                            Overdue Tasks:
+                            <span class="badge overdue_badge">
+                                ' . count($project->getTasks(array(
+                            "date_completed is null AND due_date <= $overdue "))) . '
+                            </span>
+                        </p>
+                        <p class="lead">
+                            Completed Tasks:
+                            <span class="badge">
+                                ' . count($project->getTasks(array(
+                            "date_completed is not null"))) . '
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p>
+                            <button class="btn btn-warning btn-lg complete_project"
+                            data-id="' . $project->id .'">Mark Complete</button>
+                        </p>
+                        <br/>
+                        <p>
+                            '. Phalcon\Tag::linkTo(array("tasks/index/$project->id", "View Tasks",
+                            "class" => "btn btn-success btn-lg")) . '
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>';
+
+    }
+    echo $project_content;
+?>

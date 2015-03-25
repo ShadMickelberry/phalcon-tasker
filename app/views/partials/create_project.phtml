@@ -1,0 +1,45 @@
+<?php
+echo Phalcon\Tag::form(array(
+        'tasks/create/project', 'name' => 'project_form', 'id' => 'project_form', 'ng-model' => 'project_form'));
+?>
+    <input type="hidden" name="token"
+           value="<?php echo $this->session->get('security_token'); ?>"/>
+
+    <input type="hidden" name="user_id" id="user_id" value="<?php echo $this->session->get('user_id'); ?>"/>
+
+    <div class="form-group">
+        <label for="project_name">Project</label>
+        <textarea type="text"class="form-control" id="project_name" name="project_name" ng-model="project_form.project"
+                  placeholder="Enter project description here" ng-required="true" ng-minlength="5">
+        </textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="project_due_date">Due Date</label>
+        <select class="form-control" name="project_due_date" id="project_due_date"
+               ng-class="'ng-invalid': project_due_date=='0'" ng-model="project_form.project_due_date" ng-required="true">
+            <option value="0" ng-selected="true" selected disabled>Please select due date</option>
+            <!--                for mobile devices a dropdown works best (see -->
+            <?php
+            //@todo experiment with datedropper.js
+            $day_options = '';
+            for ($i = 0; $i <= 150; $i++) {
+                $day_options .= '<option value="' . date("Y-m-d", strtotime("+$i day")) . '">
+                        '. date('D    M   jS', strtotime("+$i day")) . '
+                        </option>';
+            }
+            echo $day_options;
+            ?>
+        </select>
+    </div>
+
+
+    <div class="form-group">
+        <button class="btn btn-default btn-lg" ng-disabled="type_select!='project' || project_form.$invalid">
+            Create project
+        </button>
+    </div>
+
+<?php
+    echo Phalcon\Tag::endForm();
+?>

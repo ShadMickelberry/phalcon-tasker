@@ -1,0 +1,33 @@
+<div class="row" ng-init="!show_projects">
+    <h2>Create New Event</h2>
+</div>
+<?php
+    echo $this->getContent();
+    $security_token = $this->security->getToken();
+    $this->session->set('security_token', $security_token);
+?>
+<div class="container">
+    <div class="form-group">
+        <label for="type">Type</label>
+        <select type="text"class="form-control" id="type_select" name="type_select" ng-model="type_select" ng-required="true">
+            <option value="" ng-selected="true" disabled>Please select a type</option>
+            <option value="task">Task</option>
+            <option value="project">Project</option>
+        </select>
+    </div>
+
+    <div class="container" ng-show="type_select=='task'">
+        <?php
+            //get form from project
+            echo $this->view->partial('partials/create_task');
+        ?>
+    </div>
+
+<!--    Div for Projects-->
+
+    <div class="container" ng-show="type_select=='project'">
+        <?php
+            //get create project form from partial
+            echo $this->view->partial('partials/create_project');
+        ?>
+    </div>

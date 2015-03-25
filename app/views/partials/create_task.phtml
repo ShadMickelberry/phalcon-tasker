@@ -1,0 +1,93 @@
+<?php
+echo Phalcon\Tag::form(array(
+        'tasks/create/task', 'name' => 'task_form', 'id' => 'task_form', 'ng-model' => 'task_form'));
+?>
+    <input type="hidden" name="token"
+           value="<?php echo $this->session->get('security_token'); ?>"/>
+
+<input type="hidden" name="user_id" id="user_id" value="<?php echo $this->session->get('user_id'); ?>"/>
+
+<div class="form-group">
+    <label for="task_name">Task</label>
+    <textarea type="text"class="form-control" id="task_name" name="task_name" ng-model="task_form.task"
+              placeholder="Enter task description here" ng-required="true" ng-minlength="5">
+    </textarea>
+</div>
+
+<div class="form-group">
+    <label for="task_project">Project</label>
+    <select type="text"class="form-control" id="task_project" name="task_project" ng-model="task_form.task_project"
+        >
+
+        <?php
+        if ($projects) {
+
+            foreach ($projects as $project) {
+                echo '<option value="' . $project->id . '"> ' .$project->name .'</option>';
+            }
+        } else {
+            echo '<option value="" ng-selected="true" disabled>No Projects</option>';
+        }
+        ?>
+
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="task_priority">Priority</label>
+    <select class="form-control" name="task_priority" id="task_priority" ng-model="task_form.task_priority">
+
+        <option value="Top" ng-selected="true">Top</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="task_due_date">Due Date</label>
+    <select class="form-control" name="task_due_date" id="task_due_date" ng-model="task_form.task_due_date">
+        <option value="" ng-selected="true" disabled>Please select due date</option>
+        <!--                for mobile devices a dropdown works best (see -->
+        <?php
+        //@todo experiment with datedropper.js
+        $day_options = '';
+        for ($i = 0; $i <= 100; $i++) {
+            $day_options .= '<option value="' . date("Y-m-d", strtotime("+$i day")) . '">
+                        '. date('D    M   jS', strtotime("+$i day")) . '
+                        </option>';
+        }
+        echo $day_options;
+        ?>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="task_due_time">Due Time</label>
+    <select class="form-control" name="task_due_time" id="task_due_time" ng-model="task_form.task_due_time">
+        <option value="" ng-selected="true" disabled>Please select due time</option>
+        <!--                for mobile devices a dropdown works best (see -->
+        <?php
+        //@todo experiment with various timepickers
+        $time_options = '';
+        $time = strtotime(date('2015-01-01 07:00:00'));
+        for ($i = 0; $i <= 101; $i++) {
+            $minutes = $i*15*60;
+            $this_time = $time+$minutes;
+            $time_options .= '<option value="' . date("H:i:s", $this_time) . '">
+                        '. date("g:i A", $this_time) . '
+                        </option>';
+        }
+        echo $time_options;
+        ?>
+    </select>
+</div>
+
+<div class="form-group">
+    <button class="btn btn-default btn-lg" ng-disabled="type_select!='task' || task_form.$invalid">
+        Create Task
+    </button>
+</div>
+
+<?php
+    echo Phalcon\Tag::endForm();
+?>

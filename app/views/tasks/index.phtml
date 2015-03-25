@@ -1,0 +1,76 @@
+<div class="row">
+    <h1>Tasks</h1>
+</div>
+<div class="row">
+    <?php
+        echo Phalcon\Tag::linkTo(array('tasks/create', 'New Task', 'class' => 'btn btn-primary btn-lg'));
+    ?>
+    <br/>
+    <hr/>
+</div>
+<?php
+    echo $this->getContent();
+?>
+<div class="row col-xs-12">
+    <table id="tasks" class="display nowrap" width="100%">
+        <thead>
+            <th>Name</th>
+            <th>Project</th>
+            <th>Priority</th>
+            <th>Due Date</th>
+            <th>Due Time</th>
+            <th>Mark Complete</th>
+            <th></th>
+        </thead>
+        <tfoot>
+            <th>Name</th>
+            <th>Project</th>
+            <th>Priority</th>
+            <th>Due Date</th>
+            <th>Due Time</th>
+            <th>Mark Complete</th>
+            <th></th>
+        </tfoot>
+        <tbody>
+            <?php
+                $rows = '';
+                foreach ($tasks as $task) {
+                    $rows .= '
+                    <tr>
+                        <td class="task_name" class="" id="'. $task->id . '_task"
+                            data-field="task" value="' . $task->task . '" title="' . $task->task . '"
+                            data-id="'. $task->id . '" >' . $task->task . '
+                        </td>
+                        <!-- @todo link to project -->
+                        <td>' . $task->project->name . '</td>
+
+                        <td class="task_priority" id="'. $task->id . '_priority"
+                            data-id="'. $task->id . '" value="' . $task->priority . '"
+                            data-field="priority">' . $task->priority . '</td>
+
+                        <td class="due_date" id="'. $task->id . '_due_date"
+                            data-id="'. $task->id . '" value="' . str_replace('-', '', $task->due_date) . '"
+                            data-field="due_date">' . date('D M jS', strtotime($task->due_date)) . '</td>
+
+                        <td class="due_time" id="'. $task->id . '_due_time"
+                            data-id="'. $task->id . '" value="' . $task->due_time . '"
+                            data-field="due_time">' . date('g:i A', strtotime($task->due_time)) . '</td>
+
+                        <td>
+                            <div class="btn btn-warning btn-sm complete_task" data-id="'. $task->id . '">
+                                &#x2713; Completed
+                            <div>
+                        </td>
+                        <td>
+                        </td>
+                     </tr>';
+                }
+
+                echo $rows;
+
+            ?>
+        </tbody>
+    </table>
+
+
+</div>

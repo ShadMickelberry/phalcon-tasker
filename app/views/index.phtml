@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Shad Mickelberry">
+    <meta http-equiv="Cache-control" content="public" max-age="186400">
+
+   <?php
+        echo $this->tag->getTitle();
+
+    //        <!-- Bootstrap Core CSS -->
+        echo Phalcon\Tag::stylesheetLink("css/bootstrap.min.css");
+    //application
+        echo Phalcon\Tag::stylesheetLink(array('css/tasker.css', 'media' => 'screen'));
+        echo Phalcon\Tag::javascriptInclude('js/jquery.min.js');
+        echo $this->assets->outputCss();
+        echo $this->assets->outputJs();
+
+    ?>
+    <script type="text/javascript">
+        function date_time(id)
+        {
+            date = new Date;
+            year = date.getFullYear();
+            month = date.getMonth();
+            months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'Jully', 'August', 'September', 'October', 'November', 'December');
+            d = date.getDate();
+            day = date.getDay();
+            days = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+            h = date.getHours();
+
+
+            if(h<10)
+            {
+                h = "0"+h;
+            }
+            var dn = "PM";
+            if(h<12)
+            {
+                dn = "AM";
+            }
+            if(h>12)
+            {
+                h=h-12;
+            }
+            m = date.getMinutes();
+            if(m<10)
+            {
+                m = "0"+m;
+            }
+            s = date.getSeconds();
+            if(s<10)
+            {
+                s = "0"+s;
+            }
+            result = ''+days[day]+' '+months[month]+' '+d+' '+year+' '+h+':'+m+':'+s+' '+dn;
+            document.getElementById(id).innerHTML = result;
+            setTimeout('date_time("'+id+'");','1000');
+            return true;
+        }
+
+    </script>
+
+
+</head>
+
+<body ng-app="taskerApp">
+    <div class="container" ng-controller="taskerController">
+        <nav class="navbar navbar-default">
+
+            <div class="container-fluid">
+
+                <div class="navbar-header">
+
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+
+                    </button>
+
+                    <a class="navbar-brand" href="#">
+    <?php
+
+        if ($this->session->has('user_token')) {
+
+                if (!$this->session->has('user_first_name')) {
+
+                    $auth = \App\Models\UserAuths::findFirstByUserToken($this->session->get('user_token'));
+                    $user = $auth->user;
+                        $this->session->set('user_first_name', $user->first_name);
+                        $this->session->set('count', 1);
+
+
+                } elseif ($this->session->get('token_expiration') < time()) {
+
+                    if (!$this->session->get('access_token')) {
+                        $this->flash->error('Token Broken');
+                        $this->request->redirect('userAuths/index');
+
+                        $this->session->destroy();
+                    }
+
+                    $this->session->destroy();
+                    $this->flash->error('session expired');
+
+//                    $client = new GuzzleHttp\Client($this->config->baseUri);
+//                    $this->flash->warning('test');
+//                    $check = $client->get('http://tasker.dev/userAuths/checkSession/' . $this->session->get('access_token'));
+                  //  $check = $auth->checkSession($this->session->get('access_token'));
+
+                    if ($check['success'] != 1) {
+                      //  $this->flash->success('refreshed');
+                        $this->session->set('count', 1);
+                    }
+                    //@todo put in function to check session token, make sure token in
+                    //db isn't blank (from deorbit etc) and check refresh
+                } else {
+
+                    $count = $this->session->get('count');
+                    $count++;
+                    $this->session->set('count', $count);
+                }
+
+            echo 'Hey ' . $this->session->get('user_first_name');
+            echo '&nbsp;&nbsp;<span id="date_time"></span>';
+            //echo $this->session->get('token_expiration'). ' ' . time();
+
+        } else {
+
+            echo Phalcon\Tag::linkTo(array('userauths/', 'Login', 'class' => 'btn btn-primary'));
+            echo Phalcon\Tag::linkTo(array('users/create', 'New User', 'class' => 'btn btn-primary'));
+
+        }
+    ?>
+
+                    </a>
+
+                </div>
+
+                <div id="navbar" class="navbar-collapse collapse">
+
+                    <ul class="nav navbar-nav pull-right">
+
+                        <li ng-class="{active: home_active}"><a href="http://shad.me">Home</a></li>
+
+                        <li ng-class="{active: tasks_active}">
+                            <?php
+                                echo Phalcon\Tag::linkTo(array('tasks/index', 'Tasks'));
+                            ?>
+                        </li>
+
+                        <li ng-class="{active: projects_active}">
+                            <?php
+                                echo Phalcon\Tag::linkTo(array('projects', 'Dashboard'));
+                            ?>
+                        </li>
+
+                    </ul>
+
+
+
+                </div><!--/.nav-collapse -->
+
+            </div><!--/.container-fluid -->
+
+        </nav>
+            <?php echo $this->getContent(); ?>
+
+
+    </div>
+<!-- Footer -->
+<footer>
+    <div class="container text-center">
+        <div class="col-md-10 col-md-offset-1">
+
+            <div class="col-md-4">
+                <p>Copyright &copy; Shad.me 2015</p>
+            </div>
+            <div class="col-md-4">Built With Phalcon</div>
+        </div>
+
+    </div>
+</footer>
+<?php
+    echo Phalcon\Tag::javascriptInclude(array('js/angular.min.js'));
+    echo Phalcon\Tag::javascriptInclude('js/bootstrap.min.js');
+    echo Phalcon\Tag::javascriptInclude(array('js/tasker.js'));
+
+?>
+
+</body>
+<script type="text/javascript">window.onload = date_time('date_time');</script>
+</html>
