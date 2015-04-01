@@ -38,8 +38,8 @@
                             Overdue Tasks:
                             <span class="badge overdue_badge">
                                 ' . count($project->getTasks(array(
-                                "date_completed is null and TIMESTAMPDIFF(HOUR, NOW(), CONCAT(due_date, ' ',
-                                due_time)) < 0"
+                                "date_completed is null and DATEDIFF(CONCAT(due_date, ' ',
+                                due_time), NOW()) < 0"
                     ))) . '
                             </span>
                         </p>
